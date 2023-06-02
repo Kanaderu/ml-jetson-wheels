@@ -1,0 +1,19 @@
+services:
+  tf:
+    build:
+      context: aarch64_tx2
+    environment:
+      - TF_NEED_OPENCL=0
+      - TF_NEED_ROCM=0
+      - TF_NEED_CUDA=1
+      - TF_NEED_TENSORRT=0
+      - TF_CUDNN_VERSION=8
+      - TF_TENSORRT_VERSION=8
+      - TF_CUDA_CLANG=0
+      - TF_CUDA_COMPUTE_CAPABILITIES=5.3,6.2,7.2
+      - TF_DOWNLOAD_CLANG=0
+      - TF_SET_ANDROID_WORKSPACE=0
+    volumes:
+      - ./output:/output
+    working_dir: /output
+    command: bash

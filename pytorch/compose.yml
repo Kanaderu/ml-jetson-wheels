@@ -1,0 +1,12 @@
+services:
+  torch:
+    build:
+      context: aarch64_tx2
+    environment:
+      # number of compilation threads
+      - MAX_JOBS=4
+      - TORCH_CUDA_ARCH_LIST=5.3;6.2;7.2
+    volumes:
+      - ./output:/output
+    working_dir: /output
+    command: bash
