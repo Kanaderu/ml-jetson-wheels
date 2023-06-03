@@ -47,6 +47,11 @@ RUN git clone -b v${PYTORCH_VERSION} --depth=1 --recursive https://github.com/py
 
 RUN pip install -r pytorch/requirements.txt
 
+# download torchvision
+# check compatability matrix: https://github.com/pytorch/pytorch/wiki/PyTorch-Versions
+ARG PYTORCH_VISION_VERSION=0.14.0
+RUN git clone -b v${PYTORCH_VISION_VERSION} --depth=1 --recursive https://github.com/pytorch/vision.git
+
 # update default clang6 to clang8
 RUN unlink /usr/bin/clang && unlink /usr/bin/clang++ && \
     ln -s /usr/bin/clang-8 /usr/bin/clang && \
@@ -85,4 +90,11 @@ ENV CXX=clang++
 ENV CUDACXX=/usr/local/cuda/bin/nvcc
 
 # build python wheel
-CMD python3 setup.py bdist_wheel
+RUN python3 setup.py bdist_wheel
+
+# install built torch wheel for torchvision
+RUN pip install dist/*.whl
+WORKDIR /app/vision
+RUN python setup.py bdist_wheel
+
+CMD cp /app/torch/dist/*.whl /app/vision/dist/*.whl /output
